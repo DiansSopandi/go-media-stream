@@ -117,15 +117,14 @@ func isPublicRoute(path string) bool {
 
 func extractToken(c *fiber.Ctx) (string, error) {
 	authHeader := c.Get("Authorization")
-	if authHeader == "" {
-		return "", errors.Unauthorized("Missing Authorization header")
-	}
 	if strings.HasPrefix(authHeader, "Bearer ") {
 		return strings.TrimPrefix(authHeader, "Bearer "), nil
 	}
+
 	tokenString := c.Cookies("jwt_at")
 	if tokenString != "" {
 		return tokenString, nil
 	}
+
 	return "", errors.Unauthorized("Missing token")
 }

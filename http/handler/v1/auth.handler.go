@@ -391,6 +391,7 @@ func (h *AuthHandler) LoginUser(c *fiber.Ctx, loginDto dto.UserLoginRequest) (dt
 		return dto.UserLoginResponse{}, err
 	}
 
+	isProd := pkg.Cfg.Application.Env == "production"
 	// Set cookie Access Token
 	c.Cookie(&fiber.Cookie{
 		Name:  "jwt_at",
@@ -398,8 +399,8 @@ func (h *AuthHandler) LoginUser(c *fiber.Ctx, loginDto dto.UserLoginRequest) (dt
 		// Expires:  time.Now().Add(15 * time.Minute),
 		Expires:     time.Now().Add(24 * time.Hour),
 		HTTPOnly:    true,
-		Secure:      true,
-		SameSite:    "Strict",
+		Secure:      isProd,
+		SameSite:    "None",
 		Path:        "/",
 		SessionOnly: true,
 	})
@@ -410,8 +411,8 @@ func (h *AuthHandler) LoginUser(c *fiber.Ctx, loginDto dto.UserLoginRequest) (dt
 		Value:       res.RefreshToken,
 		Expires:     time.Now().Add(7 * 24 * time.Hour),
 		HTTPOnly:    true,
-		Secure:      true,
-		SameSite:    "Strict",
+		Secure:      isProd,
+		SameSite:    "None",
 		Path:        "/",
 		SessionOnly: true,
 	})

@@ -57,17 +57,17 @@ func ServerInitialize() {
 	// global middleware panic handler
 	app.Use(middlewares.GlobalRecoveryMiddleware)
 
-	// global guard JWT authentication middleware
-	app.Use(middlewares.JwtAuthGuard)
-
 	allowed := strings.Split(pkg.Cfg.Application.CorsOrigins, ",")
 	app.Use(cors.New(cors.Config{
-		// AllowOrigins: "http://example.com, http://localhost:3000",
+		// AllowOrigins: "http://localhost:3000",
 		AllowOrigins:     strings.Join(allowed, ","),
 		AllowCredentials: true,
-		AllowHeaders:     "*",
-		AllowMethods:     "GET,POST,PUT,PATCH,DELETE",
+		AllowHeaders:     "Origin, Content-Type, Accept, Authorization",
+		AllowMethods:     "GET,POST,PUT,PATCH,DELETE,OPTIONS",
 	}))
+
+	// global guard JWT authentication middleware
+	app.Use(middlewares.JwtAuthGuard)
 
 	// middlewares.InitRateLimiter()
 	pkg.InitRedis()

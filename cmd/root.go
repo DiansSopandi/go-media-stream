@@ -3,7 +3,7 @@ package cmd
 import (
 	"os"
 
-	"github.com/DiansSopandi/goride_be/bootstrap"
+	"github.com/DiansSopandi/media_stream/bootstrap"
 	"github.com/spf13/cobra"
 )
 

@@ -5,8 +5,8 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/DiansSopandi/goride_be/bootstrap"
-	"github.com/DiansSopandi/goride_be/pkg"
+	"github.com/DiansSopandi/media_stream/bootstrap"
+	"github.com/DiansSopandi/media_stream/pkg"
 	"github.com/spf13/cobra"
 )
 

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"runtime/debug"
 
-	"github.com/DiansSopandi/goride_be/errors"
-	"github.com/DiansSopandi/goride_be/pkg"
+	"github.com/DiansSopandi/media_stream/errors"
+	"github.com/DiansSopandi/media_stream/pkg"
 	"github.com/gofiber/fiber/v2"
 )
 

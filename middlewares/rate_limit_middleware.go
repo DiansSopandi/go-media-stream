@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/DiansSopandi/goride_be/errors"
-	"github.com/DiansSopandi/goride_be/pkg"
+	"github.com/DiansSopandi/media_stream/errors"
+	"github.com/DiansSopandi/media_stream/pkg"
 	"github.com/go-redis/redis_rate/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"

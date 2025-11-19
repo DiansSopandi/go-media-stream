@@ -1,7 +1,7 @@
 package middlewares
 
 import (
-	"github.com/DiansSopandi/goride_be/db"
+	"github.com/DiansSopandi/media_stream/db"
 	"github.com/gofiber/fiber/v2"
 )
 

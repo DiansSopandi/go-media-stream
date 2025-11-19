@@ -6,7 +6,7 @@ import (
 	"log"
 	"sync"
 
-	"github.com/DiansSopandi/goride_be/pkg"
+	"github.com/DiansSopandi/media_stream/pkg"
 	_ "github.com/lib/pq"
 )
 

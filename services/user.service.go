@@ -4,11 +4,11 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/DiansSopandi/goride_be/dto"
-	"github.com/DiansSopandi/goride_be/errors"
-	"github.com/DiansSopandi/goride_be/models"
-	"github.com/DiansSopandi/goride_be/pkg/utils"
-	"github.com/DiansSopandi/goride_be/repository"
+	"github.com/DiansSopandi/media_stream/dto"
+	"github.com/DiansSopandi/media_stream/errors"
+	"github.com/DiansSopandi/media_stream/models"
+	"github.com/DiansSopandi/media_stream/pkg/utils"
+	"github.com/DiansSopandi/media_stream/repository"
 )
 
 type UserService struct {

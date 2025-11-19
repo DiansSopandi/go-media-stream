@@ -6,7 +6,7 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/DiansSopandi/goride_be/dto"
+	"github.com/DiansSopandi/media_stream/dto"
 	"github.com/go-playground/validator/v10"
 )
 

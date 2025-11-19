@@ -1,8 +1,8 @@
 package routes
 
 import (
-	"github.com/DiansSopandi/goride_be/http/handler/v1"
-	"github.com/DiansSopandi/goride_be/pkg"
+	"github.com/DiansSopandi/media_stream/http/handler/v1"
+	"github.com/DiansSopandi/media_stream/pkg"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -20,6 +20,7 @@ func SetupRoutes(app *fiber.App) {
 	handler.RootHandler(api)
 	handler.RolesRoutes(api)
 	handler.UserRoutes(api)
+	handler.UploadRoutes(api)
 	handler.AuthRoutes(auth)
 
 	// Route untuk favicon.ico

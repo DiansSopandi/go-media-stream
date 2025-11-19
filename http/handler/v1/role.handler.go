@@ -4,13 +4,13 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/DiansSopandi/goride_be/dto"
-	"github.com/DiansSopandi/goride_be/errors"
-	"github.com/DiansSopandi/goride_be/middlewares"
-	"github.com/DiansSopandi/goride_be/models"
-	"github.com/DiansSopandi/goride_be/pkg"
-	"github.com/DiansSopandi/goride_be/repository"
-	service "github.com/DiansSopandi/goride_be/services"
+	"github.com/DiansSopandi/media_stream/dto"
+	"github.com/DiansSopandi/media_stream/errors"
+	"github.com/DiansSopandi/media_stream/middlewares"
+	"github.com/DiansSopandi/media_stream/models"
+	"github.com/DiansSopandi/media_stream/pkg"
+	"github.com/DiansSopandi/media_stream/repository"
+	service "github.com/DiansSopandi/media_stream/services"
 	"github.com/gofiber/fiber/v2"
 )
 

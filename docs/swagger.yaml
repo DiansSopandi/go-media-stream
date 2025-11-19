@@ -324,6 +324,30 @@ paths:
       summary: CreateRole
       tags:
       - Role
+  /v1/upload:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Upload audio file (mp3) via multipart/form-data
+      parameters:
+      - description: File to upload
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Upload file stream
+      tags:
+      - Upload
   /v1/users:
     get:
       description: This user route returns a simple JSON response

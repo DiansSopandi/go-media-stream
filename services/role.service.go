@@ -3,8 +3,8 @@ package service
 import (
 	"database/sql"
 
-	"github.com/DiansSopandi/goride_be/models"
-	"github.com/DiansSopandi/goride_be/repository"
+	"github.com/DiansSopandi/media_stream/models"
+	"github.com/DiansSopandi/media_stream/repository"
 )
 
 type RoleService struct {

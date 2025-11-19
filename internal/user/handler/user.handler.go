@@ -1,7 +1,7 @@
 package handler
 
 import (
-	service "github.com/DiansSopandi/goride_be/services"
+	service "github.com/DiansSopandi/media_stream/services"
 	"github.com/gofiber/fiber/v2"
 )
 

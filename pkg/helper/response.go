@@ -1,8 +1,8 @@
 package pkg
 
 import (
-	"github.com/DiansSopandi/goride_be/dto"
-	"github.com/DiansSopandi/goride_be/models"
+	"github.com/DiansSopandi/media_stream/dto"
+	"github.com/DiansSopandi/media_stream/models"
 )
 
 func ToUserResponse(user models.User, roles []string) dto.UserResponse {

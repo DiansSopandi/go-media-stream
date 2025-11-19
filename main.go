@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/DiansSopandi/goride_be/bootstrap"
-	"github.com/DiansSopandi/goride_be/cmd"
-	_ "github.com/DiansSopandi/goride_be/docs"
+	"github.com/DiansSopandi/media_stream/bootstrap"
+	"github.com/DiansSopandi/media_stream/cmd"
+	_ "github.com/DiansSopandi/media_stream/docs"
 )
 
 // @title GoRide API

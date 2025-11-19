@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/DiansSopandi/goride_be/db"
-	"github.com/DiansSopandi/goride_be/dto"
-	"github.com/DiansSopandi/goride_be/models"
+	"github.com/DiansSopandi/media_stream/db"
+	"github.com/DiansSopandi/media_stream/dto"
+	"github.com/DiansSopandi/media_stream/models"
 	"github.com/lib/pq"
 )
 

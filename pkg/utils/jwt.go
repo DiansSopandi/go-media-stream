@@ -3,7 +3,7 @@ package utils
 import (
 	"time"
 
-	"github.com/DiansSopandi/goride_be/pkg"
+	"github.com/DiansSopandi/media_stream/pkg"
 	"github.com/golang-jwt/jwt/v5"
 )
 

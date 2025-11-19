@@ -3,8 +3,8 @@ package repository
 import (
 	"database/sql"
 
-	"github.com/DiansSopandi/goride_be/db"
-	"github.com/DiansSopandi/goride_be/models"
+	"github.com/DiansSopandi/media_stream/db"
+	"github.com/DiansSopandi/media_stream/models"
 )
 
 type RoleRepository struct {

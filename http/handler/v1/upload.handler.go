@@ -73,23 +73,20 @@ func UploadFileHandler(h *UploadHandler) fiber.Handler {
 		// if err := c.BodyParser(&createTrackDto); err != nil {
 		// 	return fiber.NewError(fiber.StatusBadRequest, err.Error())
 		// }
-		// Ambil file dari multipart form (field name: "file")
+
 		fileHeader, err := c.FormFile("file")
 		if err != nil {
 			return fiber.NewError(fiber.StatusBadRequest, "file is required")
 		}
 
-		// Pastikan folder upload ada
 		uploadDir := "uploads"
 		if err := os.MkdirAll(uploadDir, 0755); err != nil {
 			return errors.InternalError(fmt.Sprintf("failed to create upload dir: %v", err))
 		}
 
-		// Buat nama file unik
 		dstFilename := fmt.Sprintf("%d_%s", time.Now().UnixNano(), filepath.Base(fileHeader.Filename))
 		dstPath := filepath.Join(uploadDir, dstFilename)
 
-		// Buka source file stream
 		src, err := fileHeader.Open()
 		if err != nil {
 			return errors.InternalError(fmt.Sprintf("failed to open uploaded file: %v", err))

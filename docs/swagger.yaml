@@ -8,6 +8,47 @@ definitions:
         example: user
         type: string
     type: object
+  dto.TrackCreateRequest:
+    properties:
+      album:
+        example: Tik Tok
+        maxLength: 100
+        type: string
+      artist:
+        example: artist
+        maxLength: 100
+        type: string
+      description:
+        example: This is a sample track description.
+        maxLength: 500
+        type: string
+      duration:
+        example: 240
+        minimum: 0
+        type: integer
+      filename:
+        example: track.mp3
+        maxLength: 50
+        type: string
+      genre:
+        example: Tik Tok
+        maxLength: 100
+        type: string
+      is_public:
+        example: true
+        type: boolean
+      title:
+        example: song title
+        maxLength: 100
+        type: string
+    required:
+    - album
+    - artist
+    - duration
+    - filename
+    - genre
+    - title
+    type: object
   dto.UserCreateRequest:
     properties:
       email:
@@ -33,10 +74,10 @@ definitions:
   dto.UserLoginRequest:
     properties:
       email:
-        example: Q2Sb9@example.com
+        example: admin@redtech.co.id
         type: string
       password:
-        example: Pass123!@
+        example: redtech.co.id
         type: string
     required:
     - email
@@ -328,6 +369,7 @@ paths:
     post:
       consumes:
       - multipart/form-data
+      - application/json
       description: Upload audio file (mp3) via multipart/form-data
       parameters:
       - description: File to upload
@@ -335,6 +377,12 @@ paths:
         name: file
         required: true
         type: file
+      - description: Create Track Request
+        in: body
+        name: trackDto
+        required: true
+        schema:
+          $ref: '#/definitions/dto.TrackCreateRequest'
       produces:
       - application/json
       responses:

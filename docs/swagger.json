@@ -280,7 +280,8 @@
                 ],
                 "description": "Upload audio file (mp3) via multipart/form-data",
                 "consumes": [
-                    "multipart/form-data"
+                    "multipart/form-data",
+                    "application/json"
                 ],
                 "produces": [
                     "application/json"
@@ -296,6 +297,15 @@
                         "name": "file",
                         "in": "formData",
                         "required": true
+                    },
+                    {
+                        "description": "Create Track Request",
+                        "name": "trackDto",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.TrackCreateRequest"
+                        }
                     }
                 ],
                 "responses": {
@@ -399,6 +409,58 @@
                 }
             }
         },
+        "dto.TrackCreateRequest": {
+            "type": "object",
+            "required": [
+                "album",
+                "artist",
+                "duration",
+                "filename",
+                "genre",
+                "title"
+            ],
+            "properties": {
+                "album": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "example": "Tik Tok"
+                },
+                "artist": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "example": "artist"
+                },
+                "description": {
+                    "type": "string",
+                    "maxLength": 500,
+                    "example": "This is a sample track description."
+                },
+                "duration": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "example": 240
+                },
+                "filename": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "example": "track.mp3"
+                },
+                "genre": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "example": "Tik Tok"
+                },
+                "is_public": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "title": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "example": "song title"
+                }
+            }
+        },
         "dto.UserCreateRequest": {
             "type": "object",
             "properties": {
@@ -438,11 +500,11 @@
             "properties": {
                 "email": {
                     "type": "string",
-                    "example": "Q2Sb9@example.com"
+                    "example": "admin@redtech.co.id"
                 },
                 "password": {
                     "type": "string",
-                    "example": "Pass123!@"
+                    "example": "redtech.co.id"
                 }
             }
         },

@@ -2,8 +2,14 @@ package handler
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
+	"io"
+	"os"
+	"path/filepath"
 	"strconv"
+	"strings"
+	"time"
 
 	"github.com/DiansSopandi/media_stream/dto"
 	"github.com/DiansSopandi/media_stream/errors"
@@ -44,57 +50,68 @@ func UploadRoutes(route fiber.Router) {
 // @Accept json
 // @Produce json
 // @Param file formData file true "File to upload"
-// @Param trackDto body dto.TrackCreateRequest true "Create Track Request"
-// @Security BearerAuth
+// Param trackDto body dto.TrackCreateRequest true "Create Track Request"
+// Param trackDto formData string false "Create Track Request as JSON (e.g. {\"title\":\"...\",\"artist\":\"...\",\"duration\":240,\"is_public\":true})"
+// @Param title formData string false "Track title"
+// @Param artist formData string false "Artist name"
+// @Param album formData string false "Album name"
+// @Param description formData string false "Track description"
+// @Param genre formData string false "Genre"
+// @Param duration formData integer false "Duration in seconds"
+// @Param filename formData string false "Original filename or custom filename"
+// @Param is_public formData boolean false "Is public (true/false)"
+// Security BearerAuth
 // @Success 200 {object} map[string]interface{}
+// @Failure 400 {object} map[string]interface{}
+// @Failure 401 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
 // @Router /v1/upload [post]
 func UploadFileHandler(h *UploadHandler) fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		var createTrackDto dto.TrackCreateRequest
+		// var createTrackDto dto.TrackCreateRequest
 
-		if err := c.BodyParser(&createTrackDto); err != nil {
-			return fiber.NewError(fiber.StatusBadRequest, err.Error())
-		}
-		// Ambil file dari multipart form (field name: "file")
-		// fileHeader, err := c.FormFile("file")
-		// if err != nil {
-		// 	return fiber.NewError(fiber.StatusBadRequest, "file is required")
+		// if err := c.BodyParser(&createTrackDto); err != nil {
+		// 	return fiber.NewError(fiber.StatusBadRequest, err.Error())
 		// }
+		// Ambil file dari multipart form (field name: "file")
+		fileHeader, err := c.FormFile("file")
+		if err != nil {
+			return fiber.NewError(fiber.StatusBadRequest, "file is required")
+		}
 
 		// Pastikan folder upload ada
-		// uploadDir := "uploads"
-		// if err := os.MkdirAll(uploadDir, 0755); err != nil {
-		// 	return errors.InternalError(fmt.Sprintf("failed to create upload dir: %v", err))
-		// }
+		uploadDir := "uploads"
+		if err := os.MkdirAll(uploadDir, 0755); err != nil {
+			return errors.InternalError(fmt.Sprintf("failed to create upload dir: %v", err))
+		}
 
 		// Buat nama file unik
-		// dstFilename := fmt.Sprintf("%d_%s", time.Now().UnixNano(), filepath.Base(fileHeader.Filename))
-		// dstPath := filepath.Join(uploadDir, dstFilename)
+		dstFilename := fmt.Sprintf("%d_%s", time.Now().UnixNano(), filepath.Base(fileHeader.Filename))
+		dstPath := filepath.Join(uploadDir, dstFilename)
 
 		// Buka source file stream
-		// src, err := fileHeader.Open()
-		// if err != nil {
-		// 	return errors.InternalError(fmt.Sprintf("failed to open uploaded file: %v", err))
-		// }
-		// defer src.Close()
+		src, err := fileHeader.Open()
+		if err != nil {
+			return errors.InternalError(fmt.Sprintf("failed to open uploaded file: %v", err))
+		}
+		defer src.Close()
 
 		// Buat file tujuan dan stream copy (tidak memuat semua ke memory)
-		// dst, err := os.Create(dstPath)
-		// if err != nil {
-		// 	return errors.InternalError(fmt.Sprintf("failed to create destination file: %v", err))
-		// }
-		// defer dst.Close()
+		dst, err := os.Create(dstPath)
+		if err != nil {
+			return errors.InternalError(fmt.Sprintf("failed to create destination file: %v", err))
+		}
+		defer dst.Close()
 
-		// if _, err := io.Copy(dst, src); err != nil {
-		// 	return errors.InternalError(fmt.Sprintf("failed to save uploaded file: %v", err))
-		// }
+		if _, err := io.Copy(dst, src); err != nil {
+			return errors.InternalError(fmt.Sprintf("failed to save uploaded file: %v", err))
+		}
 
-		// res := map[string]interface{}{
-		// 	"filename": fileHeader.Filename,
-		// 	"stored":   dstFilename,
-		// 	"path":     dstPath,
-		// 	"size":     fileHeader.Size,
-		// }
+		createTrackDto, err := parseTrackCreateRequest(c)
+		fmt.Println("Parsed Track Create DTO:", createTrackDto)
+		if err != nil {
+			return fiber.NewError(fiber.StatusBadRequest, err.Error())
+		}
 
 		res, err := h.CreateUpload(c, &createTrackDto)
 
@@ -117,7 +134,7 @@ func (h *UploadHandler) CreateUpload(c *fiber.Ctx, uploadDto *dto.TrackCreateReq
 
 	// get user id from jwt claims in context
 	userIDInt64, err := extractUserIDFromClaims(c)
-	fmt.Println("Extracted User ID:", userIDInt64)
+	// fmt.Println("Extracted User ID:", userIDInt64)
 	if err != nil {
 		return models.Track{}, err
 	}
@@ -125,6 +142,17 @@ func (h *UploadHandler) CreateUpload(c *fiber.Ctx, uploadDto *dto.TrackCreateReq
 	// claims := c.Locals("user").(jwt.MapClaims)
 	// userID := fmt.Sprintf("%v", claims["sub"])
 	// fmt.Println("User ID from claims:", userID)
+
+	// metadata := map[string]interface{
+	// 	"filename": fileHeader.Filename,
+	// 	"stored":   dstFilename,
+	// 	"path":     dstPath,
+	// 	"size":     fileHeader.Size,
+	// }
+	// if err := json.Unmarshal([]byte(metadata), &map[string]interface{}{}); err != nil {
+	// 	metadata = map[string]interface{}{}
+	// }
+	// createTrackDto.Metadata = metadata
 
 	track := models.Track{
 		Title:       uploadDto.Title,
@@ -136,6 +164,7 @@ func (h *UploadHandler) CreateUpload(c *fiber.Ctx, uploadDto *dto.TrackCreateReq
 		Filename:    uploadDto.Filename,
 		IsPublic:    uploadDto.IsPublic,
 		UserID:      int(userIDInt64),
+		// Metadata:    metadata,
 	}
 
 	return service.NewTrackService(trackRepo).CreateTrack(tx, &track)
@@ -188,4 +217,54 @@ func toInt64(v interface{}) int64 {
 		}
 	}
 	return 0
+}
+
+func parseTrackCreateRequest(c *fiber.Ctx) (dto.TrackCreateRequest, error) {
+	var d dto.TrackCreateRequest
+
+	// 1) Coba parse JSON/body standar (akan no-op jika multipart)
+	_ = c.BodyParser(&d)
+
+	// 2) Jika multipart/form-data, override dari form fields jika ada
+	ct := c.Get("Content-Type")
+	if !strings.Contains(ct, "multipart/form-data") {
+		return d, nil
+	}
+
+	// Jika ada single form field "trackDto" berisi JSON, unmarshal itu dulu (mendukung Swagger textarea JSON)
+	if td := c.FormValue("trackDto"); td != "" {
+		if err := json.Unmarshal([]byte(td), &d); err != nil {
+			return d, fmt.Errorf("invalid trackDto json: %w", err)
+		}
+		// lanjut untuk override individual form fields jika ada
+	}
+
+	// helper untuk set string field dari form value jika ada
+	setStr := func(field string, setter func(string)) {
+		if v := c.FormValue(field); v != "" {
+			setter(v)
+		}
+	}
+
+	setStr("title", func(v string) { d.Title = v })
+	setStr("description", func(v string) { d.Description = v })
+	setStr("artist", func(v string) { d.Artist = v })
+	setStr("album", func(v string) { d.Album = v })
+	setStr("genre", func(v string) { d.Genre = v })
+	setStr("filename", func(v string) { d.Filename = v })
+
+	if v := c.FormValue("duration"); v != "" {
+		if i, err := strconv.Atoi(v); err == nil {
+			d.Duration = i
+		}
+	}
+	if v := c.FormValue("is_public"); v != "" {
+		if b, err := strconv.ParseBool(v); err == nil {
+			d.IsPublic = b
+		}
+	}
+
+	// Jika Anda punya metadata di DTO sebagai string atau map, bisa di-handle di sini juga.
+
+	return d, nil
 }

@@ -8,47 +8,6 @@ definitions:
         example: user
         type: string
     type: object
-  dto.TrackCreateRequest:
-    properties:
-      album:
-        example: Tik Tok
-        maxLength: 100
-        type: string
-      artist:
-        example: artist
-        maxLength: 100
-        type: string
-      description:
-        example: This is a sample track description.
-        maxLength: 500
-        type: string
-      duration:
-        example: 240
-        minimum: 0
-        type: integer
-      filename:
-        example: track.mp3
-        maxLength: 50
-        type: string
-      genre:
-        example: Tik Tok
-        maxLength: 100
-        type: string
-      is_public:
-        example: true
-        type: boolean
-      title:
-        example: song title
-        maxLength: 100
-        type: string
-    required:
-    - album
-    - artist
-    - duration
-    - filename
-    - genre
-    - title
-    type: object
   dto.UserCreateRequest:
     properties:
       email:
@@ -377,12 +336,38 @@ paths:
         name: file
         required: true
         type: file
-      - description: Create Track Request
-        in: body
-        name: trackDto
-        required: true
-        schema:
-          $ref: '#/definitions/dto.TrackCreateRequest'
+      - description: Track title
+        in: formData
+        name: title
+        type: string
+      - description: Artist name
+        in: formData
+        name: artist
+        type: string
+      - description: Album name
+        in: formData
+        name: album
+        type: string
+      - description: Track description
+        in: formData
+        name: description
+        type: string
+      - description: Genre
+        in: formData
+        name: genre
+        type: string
+      - description: Duration in seconds
+        in: formData
+        name: duration
+        type: integer
+      - description: Original filename or custom filename
+        in: formData
+        name: filename
+        type: string
+      - description: Is public (true/false)
+        in: formData
+        name: is_public
+        type: boolean
       produces:
       - application/json
       responses:
@@ -391,8 +376,21 @@ paths:
           schema:
             additionalProperties: true
             type: object
-      security:
-      - BearerAuth: []
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: Upload file stream
       tags:
       - Upload

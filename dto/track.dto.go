@@ -1,14 +1,15 @@
 package dto
 
 type TrackCreateRequest struct {
-	Filename    string `json:"filename" validate:"required,max=50" example:"track.mp3"`
-	Title       string `json:"title" validate:"required,max=100" example:"song title"`
-	Artist      string `json:"artist" validate:"required,max=100" example:"artist"`
-	Album       string `json:"album" validate:"required,max=100" example:"Tik Tok"`
-	Genre       string `json:"genre" validate:"required,max=100" example:"Tik Tok"`
-	Duration    int    `json:"duration" validate:"required,min=0" example:"240"`
-	Description string `json:"description" validate:"max=500" example:"This is a sample track description."`
-	IsPublic    bool   `json:"is_public" example:"true"`
+	Filename    string                 `json:"filename" validate:"required,max=50" example:"track.mp3"`
+	Metadata    map[string]interface{} `json:"metadata" example:"{\"key\":\"value\"}"`
+	Title       string                 `json:"title" validate:"required,max=100" example:"song title"`
+	Artist      string                 `json:"artist" validate:"required,max=100" example:"artist"`
+	Album       string                 `json:"album" validate:"required,max=100" example:"Tik Tok"`
+	Genre       string                 `json:"genre" validate:"required,max=100" example:"Tik Tok"`
+	Duration    int                    `json:"duration" validate:"required,min=0" example:"240"`
+	Description string                 `json:"description" validate:"max=500" example:"This is a sample track description."`
+	IsPublic    bool                   `json:"is_public" example:"true"`
 }
 
 type TrackCreateResponse struct {

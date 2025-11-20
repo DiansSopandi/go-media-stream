@@ -273,11 +273,6 @@
         },
         "/v1/upload": {
             "post": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
                 "description": "Upload audio file (mp3) via multipart/form-data",
                 "consumes": [
                     "multipart/form-data",
@@ -299,18 +294,78 @@
                         "required": true
                     },
                     {
-                        "description": "Create Track Request",
-                        "name": "trackDto",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.TrackCreateRequest"
-                        }
+                        "type": "string",
+                        "description": "Track title",
+                        "name": "title",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Artist name",
+                        "name": "artist",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Album name",
+                        "name": "album",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Track description",
+                        "name": "description",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Genre",
+                        "name": "genre",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Duration in seconds",
+                        "name": "duration",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Original filename or custom filename",
+                        "name": "filename",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Is public (true/false)",
+                        "name": "is_public",
+                        "in": "formData"
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
@@ -406,58 +461,6 @@
                 "name": {
                     "type": "string",
                     "example": "user"
-                }
-            }
-        },
-        "dto.TrackCreateRequest": {
-            "type": "object",
-            "required": [
-                "album",
-                "artist",
-                "duration",
-                "filename",
-                "genre",
-                "title"
-            ],
-            "properties": {
-                "album": {
-                    "type": "string",
-                    "maxLength": 100,
-                    "example": "Tik Tok"
-                },
-                "artist": {
-                    "type": "string",
-                    "maxLength": 100,
-                    "example": "artist"
-                },
-                "description": {
-                    "type": "string",
-                    "maxLength": 500,
-                    "example": "This is a sample track description."
-                },
-                "duration": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "example": 240
-                },
-                "filename": {
-                    "type": "string",
-                    "maxLength": 50,
-                    "example": "track.mp3"
-                },
-                "genre": {
-                    "type": "string",
-                    "maxLength": 100,
-                    "example": "Tik Tok"
-                },
-                "is_public": {
-                    "type": "boolean",
-                    "example": true
-                },
-                "title": {
-                    "type": "string",
-                    "maxLength": 100,
-                    "example": "song title"
                 }
             }
         },

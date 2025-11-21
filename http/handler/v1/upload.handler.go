@@ -21,6 +21,7 @@ import (
 	service "github.com/DiansSopandi/media_stream/services"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/tcolgate/mp3"
 )
 
 // UploadHandler sederhana
@@ -122,7 +123,8 @@ func UploadFileHandler(h *UploadHandler) fiber.Handler {
 			return err
 		}
 
-		duration, err := GetAudioDuration(dstPath)
+		// duration, err := GetAudioDuration(dstPath)
+		duration, err := GetMP3Duration(dstPath)
 		if err != nil {
 			return errors.InternalError(fmt.Sprintf("failed to get duration: %v", err))
 		}
@@ -305,6 +307,46 @@ func GetAudioDuration(path string) (float64, error) {
 	duration, err := strconv.ParseFloat(durationStr, 64)
 	if err != nil {
 		return 0, err
+	}
+
+	return duration, nil
+}
+
+// func GetMP3Duration(path string) (int, error) {
+// 	f, err := os.Open(path)
+// 	if err != nil {
+// 		return 0, err
+// 	}
+// 	defer f.Close()
+
+// 	metadata, err := tag.ReadFrom(f)
+// 	if err != nil {
+// 		return 0, err
+// 	}
+
+// 	return metadata.Length(), nil // duration dalam detik
+// }
+
+func GetMP3Duration(path string) (float64, error) {
+	f, err := os.Open(path)
+	if err != nil {
+		return 0, err
+	}
+	defer f.Close()
+
+	d := mp3.NewDecoder(f)
+	var frame mp3.Frame
+	var skipped int
+	var duration float64
+
+	for {
+		if err := d.Decode(&frame, &skipped); err != nil {
+			if err == io.EOF {
+				break
+			}
+			return 0, err
+		}
+		duration += frame.Duration().Seconds()
 	}
 
 	return duration, nil

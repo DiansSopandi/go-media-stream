@@ -356,10 +356,6 @@ paths:
         in: formData
         name: genre
         type: string
-      - description: Duration in seconds
-        in: formData
-        name: duration
-        type: integer
       - description: Is public (true/false)
         in: formData
         name: is_public

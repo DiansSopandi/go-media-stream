@@ -29,7 +29,7 @@ func main() {
 	// app := fiber.New()
 
 	// docs.SwaggerInfo.Title = "Swagger Example API"
-	// docs.SwaggerInfo.Description = "This is a sample server for Go Ride API"
+	// docs.SwaggerInfo.Description = "This is a sample server for Media Stream API"
 	// docs.SwaggerInfo.Version = "1.0.0"
 	// // docs.SwaggerInfo.Host = pkg.GetEnv("APP_URL")
 	// docs.SwaggerInfo.Host = pkg.Cfg.Application.AppUrl

@@ -333,12 +333,6 @@ const docTemplate = `{
                         "in": "formData"
                     },
                     {
-                        "type": "integer",
-                        "description": "Duration in seconds",
-                        "name": "duration",
-                        "in": "formData"
-                    },
-                    {
                         "type": "boolean",
                         "description": "Is public (true/false)",
                         "name": "is_public",

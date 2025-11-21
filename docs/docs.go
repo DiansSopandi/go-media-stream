@@ -339,12 +339,6 @@ const docTemplate = `{
                         "in": "formData"
                     },
                     {
-                        "type": "string",
-                        "description": "Original filename or custom filename",
-                        "name": "filename",
-                        "in": "formData"
-                    },
-                    {
                         "type": "boolean",
                         "description": "Is public (true/false)",
                         "name": "is_public",

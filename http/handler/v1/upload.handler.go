@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -57,8 +58,8 @@ func UploadRoutes(route fiber.Router) {
 // @Param album formData string false "Album name"
 // @Param description formData string false "Track description"
 // @Param genre formData string false "Genre"
-// @Param duration formData integer false "Duration in seconds"
-// @Param filename formData string false "Original filename or custom filename"
+// Param duration formData integer false "Duration in seconds"
+// Param filename formData string false "Original filename or custom filename"
 // @Param is_public formData boolean false "Is public (true/false)"
 // Security BearerAuth
 // @Success 200 {object} map[string]interface{}
@@ -105,11 +106,32 @@ func UploadFileHandler(h *UploadHandler) fiber.Handler {
 		}
 
 		createTrackDto, err := parseTrackCreateRequest(c)
-		fmt.Println("Parsed Track Create DTO:", createTrackDto)
 		if err != nil {
 			return fiber.NewError(fiber.StatusBadRequest, err.Error())
 		}
 
+		metadata := map[string]interface{}{
+			"filename": fileHeader.Filename,
+			// "stored":   dstFilename,
+			"path": dstPath,
+			"size": fileHeader.Size,
+		}
+
+		jsonMetadata, _ := json.Marshal(metadata)
+		if err != nil {
+			return err
+		}
+
+		duration, err := GetAudioDuration(dstPath)
+		if err != nil {
+			return errors.InternalError(fmt.Sprintf("failed to get duration: %v", err))
+		}
+
+		createTrackDto.Metadata = jsonMetadata
+		createTrackDto.Filename = fileHeader.Filename
+		createTrackDto.Duration = int(duration)
+
+		fmt.Println("Parsed Track Create DTO:", createTrackDto)
 		res, err := h.CreateUpload(c, &createTrackDto)
 
 		if err != nil {
@@ -161,7 +183,7 @@ func (h *UploadHandler) CreateUpload(c *fiber.Ctx, uploadDto *dto.TrackCreateReq
 		Filename:    uploadDto.Filename,
 		IsPublic:    uploadDto.IsPublic,
 		UserID:      int(userIDInt64),
-		// Metadata:    metadata,
+		Metadata:    uploadDto.Metadata,
 	}
 
 	return service.NewTrackService(trackRepo).CreateTrack(tx, &track)
@@ -264,4 +286,26 @@ func parseTrackCreateRequest(c *fiber.Ctx) (dto.TrackCreateRequest, error) {
 	// Jika Anda punya metadata di DTO sebagai string atau map, bisa di-handle di sini juga.
 
 	return d, nil
+}
+
+func GetAudioDuration(path string) (float64, error) {
+	cmd := exec.Command("ffprobe",
+		"-v", "error",
+		"-show_entries", "format=duration",
+		"-of", "default=noprint_wrappers=1:nokey=1",
+		path,
+	)
+
+	output, err := cmd.Output()
+	if err != nil {
+		return 0, err
+	}
+
+	durationStr := strings.TrimSpace(string(output))
+	duration, err := strconv.ParseFloat(durationStr, 64)
+	if err != nil {
+		return 0, err
+	}
+
+	return duration, nil
 }

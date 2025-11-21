@@ -360,10 +360,6 @@ paths:
         in: formData
         name: duration
         type: integer
-      - description: Original filename or custom filename
-        in: formData
-        name: filename
-        type: string
       - description: Is public (true/false)
         in: formData
         name: is_public
